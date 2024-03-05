@@ -20,6 +20,25 @@ public class MyVector3
     }
 }
 
+public class MyQuaternion
+{
+    public float x;
+    public float y;
+    public float z;
+    public float w;
+    public MyQuaternion(Quaternion q)
+    {
+        this.x = q.x;
+        this.y = q.y;
+        this.z = q.z;
+        this.w = q.w;
+    }
+    public Quaternion ToQuaternion()
+    {
+        return new Quaternion(x, y, z, w);
+    }
+}
+
 public class RLResult
 {
     public float reward;
@@ -56,6 +75,13 @@ public class Agent : MonoBehaviour
         }
 
         [JsonRpcMethod]
+        MyQuaternion getRotation()
+        {
+            return new MyQuaternion(agent.transform.rotation);
+        }
+
+
+        [JsonRpcMethod]
         RLResult step(string action) 
         {
             return agent.Step(action);
@@ -68,6 +94,7 @@ public class Agent : MonoBehaviour
         }
     }
 
+    private Quaternion initialRotation;
     public GameObject Food;
     Rpc rpc;
     Simulation simulation;
@@ -80,6 +107,7 @@ public class Agent : MonoBehaviour
     {
         simulation = GetComponent<Simulation>();
         rpc = new Rpc(this);
+        initialRotation = transform.rotation;
     }
 
     // Update is called once per frame
@@ -93,6 +121,7 @@ public class Agent : MonoBehaviour
         reward = 0;
 
         Vector3 direction = Vector3.zero;
+        Quaternion rotation = Quaternion.identity;
         switch(action)
         {
             case "up":
@@ -107,11 +136,19 @@ public class Agent : MonoBehaviour
             case "left":
                 direction = - Vector3.right;
                 break;
+            case "clockwise":
+                rotation = Quaternion.Euler(0, 20, 0);
+                break;
+            case "counterclockwise":
+                rotation = Quaternion.Euler(0, -20, 0);
+                break;
         }
+
         Vector3 newPos = transform.position + direction * 50 * simulation.SimulationStepSize;
         newPos.x = Mathf.Clamp(newPos.x, -50, 50);
         newPos.z = Mathf.Clamp(newPos.z, -50, 50);
         transform.position = newPos;
+        transform.rotation = rotation * transform.rotation;
 
         simulation.Simulate();
         step += 1;
@@ -127,6 +164,7 @@ public class Agent : MonoBehaviour
     public MyVector3 Reset()
     {
         transform.position = new Vector3(0, 1, 0);
+        transform.rotation = initialRotation;
         
         Vector3 newPos = transform.position;
         while ((newPos - transform.position).magnitude < 10.0f)
