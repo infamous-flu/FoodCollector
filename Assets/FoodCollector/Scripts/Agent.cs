@@ -65,7 +65,7 @@ public class Agent : MonoBehaviour
         [JsonRpcMethod]
         void say(string message)
         {
-            Debug.Log($"you sent {message}");
+            Debug.Log($"you say: {message}");
         }
 
         [JsonRpcMethod]
@@ -79,7 +79,6 @@ public class Agent : MonoBehaviour
         {
             return new MyQuaternion(agent.transform.rotation);
         }
-
 
         [JsonRpcMethod]
         RLResult step(string action) 
