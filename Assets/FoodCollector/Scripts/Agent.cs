@@ -137,13 +137,13 @@ public class Agent : MonoBehaviour
                 direction = Vector3.forward;
                 break;
             case "down":
-                direction = -Vector3.forward;
+                direction = - Vector3.forward;
                 break;
             case "right":
                 direction = Vector3.right;
                 break;
             case "left":
-                direction = - Vector3.left;
+                direction = - Vector3.right;
                 break;
             case "clockwise":
                 rotation = Quaternion.Euler(0, 10, 0);

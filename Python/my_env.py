@@ -34,7 +34,7 @@ class MyEnv(Env):
         self.unity_comms = unity_comms
         self.action_space = spaces.Discrete(6)
         self.observation_space = spaces.Box(
-            low=-np.inf, high=np.inf, shape=(60, 60), dtype=np.float32)
+            low=-np.inf, high=np.inf, shape=(20, 20), dtype=np.float32)
 
     def step(self, action: NDArray[np.uint8]) -> Tuple[NDArray[np.float32], float, bool, dict[str, Any]]:
         action_str = ["up", "down", "right", "left",
