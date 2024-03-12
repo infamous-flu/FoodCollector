@@ -43,8 +43,8 @@ public class RLResult
 {
     public float reward;
     public bool finished;
-    public MyVector3 observation;
-    public RLResult(float reward, bool finished, MyVector3 observation)
+    public RayResults observation;
+    public RLResult(float reward, bool finished, RayResults observation)
     {
         this.reward = reward;
         this.finished = finished;
@@ -87,12 +87,13 @@ public class Agent : MonoBehaviour
         }
 
         [JsonRpcMethod]
-        MyVector3 reset()
+        RayResults reset()
         {
             return agent.Reset();
         }
     }
 
+    private Vector3 initialPosition;
     private Quaternion initialRotation;
     public GameObject Food;
     Rpc rpc;
@@ -100,13 +101,16 @@ public class Agent : MonoBehaviour
     float reward;
     bool finished;
     int step;
+    RayCasts rayCasts;
 
     // Start is called before the first frame update
     void Start()
     {
         simulation = GetComponent<Simulation>();
         rpc = new Rpc(this);
+        initialPosition = transform.position;
         initialRotation = transform.rotation;
+        rayCasts = GetComponent<RayCasts>();
     }
 
     // Update is called once per frame
@@ -160,9 +164,9 @@ public class Agent : MonoBehaviour
         return new RLResult(reward, finished, GetObservation());
     }
 
-    public MyVector3 Reset()
+    public RayResults Reset()
     {
-        transform.position = new Vector3(0, 1, 0);
+        transform.position = initialPosition;
         transform.rotation = initialRotation;
         
         Vector3 newPos = transform.position;
@@ -178,9 +182,10 @@ public class Agent : MonoBehaviour
         return GetObservation();
     }
 
-    public MyVector3 GetObservation()
+    public RayResults GetObservation()
     {
-        return new MyVector3(Food.transform.position - transform.position);
+        RayResults obs = rayCasts.GetObservation();
+        return obs;
     }
 
 

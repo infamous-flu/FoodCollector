@@ -1,11 +1,18 @@
 import argparse
 import numpy as np
-from typing import Any, Tuple
+from typing import Any, Tuple, List
 from dataclasses import dataclass
 from numpy.typing import NDArray
 from peaceful_pie.unity_comms import UnityComms
 from gym import Env, spaces
 from stable_baselines3.common.env_checker import check_env
+
+
+@dataclass
+class RayResults:
+    rayDistances: List[List[float]]
+    rayHitObjectTypes: List[List[int]]
+    NumObjectTypes: int
 
 
 @dataclass
@@ -19,7 +26,7 @@ class MyVector3:
 class RLResult:
     reward: float
     finished: bool
-    observation: MyVector3
+    observation: RayResults
 
 
 class MyEnv(Env):
@@ -30,18 +37,35 @@ class MyEnv(Env):
             low=-np.inf, high=np.inf, shape=(3,), dtype=np.float32)
 
     def step(self, action: NDArray[np.uint8]) -> Tuple[NDArray[np.float32], float, bool, dict[str, Any]]:
-        action_str = ["up", "down", "left", "right"][action]
+        action_str = ["up", "down", "left", "right",
+                      "clockwise", "counterclockwise"][action]
         rl_result: RLResult = self.unity_comms.step(
             action=action_str, ResultClass=RLResult)
         info = {"finished": rl_result.finished}
-        return self._obs_vec3_to_np_array(rl_result.observation), rl_result.reward, rl_result.finished, info
+        return self._ray_results_to_np_array(rl_result.observation), rl_result.reward, rl_result.finished, info
 
     def reset(self) -> NDArray[np.float32]:
-        obs_vec3: MyVector3 = self.unity_comms.reset(ResultClass=MyVector3)
-        return self._obs_vec3_to_np_array(obs_vec3)
+        ray_results: RayResults = self.unity_comms.reset(
+            ResultClass=RayResults)
+        return self._ray_results_to_np_array(ray_results)
 
-    def _obs_vec3_to_np_array(self, vec3: MyVector3) -> NDArray[np.float32]:
-        return np.array([vec3.x, vec3.y, vec3.z], dtype=np.float32)
+    def _ray_results_to_np_array(self, ray_results: RayResults):
+        distances_np = np.array(ray_results.rayDistances)
+        distances_np = 1 / distances_np
+        object_types_np = np.array(ray_results.rayHitObjectTypes)
+
+        _obs = np.zeros(
+            (ray_results.NumObjectTypes + 1, *distances_np.shape), dtype=np.float32
+        )
+        np.put_along_axis(
+            _obs,
+            np.expand_dims(object_types_np, axis=0),
+            np.expand_dims(distances_np, axis=0),
+            axis=0,
+        )
+
+        _obs = _obs[:-1]
+        return _obs
 
 
 def run(args: argparse.Namespace) -> None:

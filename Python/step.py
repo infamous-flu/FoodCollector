@@ -1,5 +1,6 @@
 import argparse
 from dataclasses import dataclass
+from typing import List
 from peaceful_pie.unity_comms import UnityComms
 
 
@@ -11,10 +12,17 @@ class MyVector3:
 
 
 @dataclass
+class RayResults:
+    rayDistances: List[List[float]]
+    rayHitObjectTypes: List[List[int]]
+    NumObjectTypes: int
+
+
+@dataclass
 class RLResult:
     reward: float
     finished: bool
-    observation: MyVector3
+    observation: RayResults
 
 
 def run(args: argparse.Namespace) -> None:
