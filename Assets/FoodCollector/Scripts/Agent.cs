@@ -93,7 +93,7 @@ public class Agent : MonoBehaviour
         }
 
         [JsonRpcMethod]
-        RayResults reset()
+        RLResult reset()
         {
             return agent.Reset();
         }
@@ -161,7 +161,7 @@ public class Agent : MonoBehaviour
         return new RLResult(reward, finished, GetObservation());
     }
 
-    public RayResults Reset()
+    public RLResult Reset()
     {
         transform.position = initialPosition;
         transform.rotation = initialRotation;
@@ -173,12 +173,13 @@ public class Agent : MonoBehaviour
         }
         Food.gameObject.transform.position = newPos;
         
-        finished = false;
         step = 0;
+        reward = 0;
+        finished = false;
 
         simulation.Simulate();
         
-        return GetObservation();
+        return new RLResult(reward, finished, GetObservation());
     }
 
     public RayResults GetObservation()

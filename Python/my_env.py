@@ -41,12 +41,13 @@ class MyEnv(Env):
         rl_result: RLResult = self.unity_comms.step(
             action=action_str, ResultClass=RLResult)
         info = {"finished": rl_result.finished}
+        # print(self._ray_results_to_np_array(rl_result.observation))
         return self._ray_results_to_np_array(rl_result.observation), rl_result.reward, rl_result.finished, info
 
     def reset(self) -> NDArray[np.float32]:
-        ray_results: RayResults = self.unity_comms.reset(
-            ResultClass=RayResults)
-        return self._ray_results_to_np_array(ray_results)
+        rl_result: RLResult = self.unity_comms.reset(ResultClass=RLResult)
+        # print(self._ray_results_to_np_array(rl_result.observation))
+        return self._ray_results_to_np_array(rl_result.observation)
 
     def _ray_results_to_np_array(self, ray_results: RayResults):
         distances_np = np.array(ray_results.rayDistances)
