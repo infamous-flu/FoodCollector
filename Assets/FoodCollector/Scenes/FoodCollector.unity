@@ -601,10 +601,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   XResolution: 60
-  YResolution: 60
+  YResolution: 3
   XTotalAngle: 60
-  YTotalAngle: 60
-  RayLength: 40
+  YTotalAngle: 3
+  RayLength: 100
   RayRadius: 0
   ShowRaysInEditor: 1
   ShowRaysInPlayer: 0

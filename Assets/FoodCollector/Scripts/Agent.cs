@@ -81,7 +81,7 @@ public class Agent : MonoBehaviour
         }
 
         [JsonRpcMethod]
-        RayResults getObs()
+        RayResults getObservation()
         {
             return agent.GetObservation();
         }
@@ -112,11 +112,11 @@ public class Agent : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        simulation = GetComponent<Simulation>();
         rpc = new Rpc(this);
+        simulation = GetComponent<Simulation>();
+        rayCasts = GetComponent<RayCasts>();
         initialPosition = transform.position;
         initialRotation = transform.rotation;
-        rayCasts = GetComponent<RayCasts>();
     }
 
     // Update is called once per frame
@@ -133,22 +133,13 @@ public class Agent : MonoBehaviour
         Quaternion rotation = Quaternion.identity;
         switch(action)
         {
-            case "up":
-                direction = Vector3.forward;
-                break;
-            case "down":
-                direction = - Vector3.forward;
-                break;
-            case "right":
-                direction = Vector3.right;
+            case "forward":
+                direction = transform.forward;
                 break;
             case "left":
-                direction = - Vector3.right;
-                break;
-            case "clockwise":
                 rotation = Quaternion.Euler(0, 10, 0);
                 break;
-            case "counterclockwise":
+            case "right":
                 rotation = Quaternion.Euler(0, -10, 0);
                 break;
         }
@@ -157,7 +148,7 @@ public class Agent : MonoBehaviour
         newPos.x = Mathf.Clamp(newPos.x, -50, 50);
         newPos.z = Mathf.Clamp(newPos.z, -50, 50);
         transform.position = newPos;
-        transform.rotation = rotation * transform.rotation;
+        transform.rotation = transform.rotation * rotation;
 
         simulation.Simulate();
         step += 1;
@@ -185,13 +176,14 @@ public class Agent : MonoBehaviour
         finished = false;
         step = 0;
 
+        simulation.Simulate();
+        
         return GetObservation();
     }
 
     public RayResults GetObservation()
     {
-        RayResults obs = rayCasts.GetObservation();
-        return obs;
+        return rayCasts.GetObservation();
     }
 
 

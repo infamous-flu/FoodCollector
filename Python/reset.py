@@ -12,20 +12,6 @@ class RayResults:
     NumObjectTypes: int
 
 
-@dataclass
-class MyVector3:
-    x: float
-    y: float
-    z: float
-
-
-@dataclass
-class RLResult:
-    reward: float
-    isFinished: bool
-    observation: RayResults
-
-
 def _ray_results_to_np_array(ray_results: RayResults):
     distances_np = np.array(ray_results.rayDistances)
     distances_np = 1 / distances_np
