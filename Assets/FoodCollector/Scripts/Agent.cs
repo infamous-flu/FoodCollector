@@ -81,6 +81,12 @@ public class Agent : MonoBehaviour
         }
 
         [JsonRpcMethod]
+        RayResults getObs()
+        {
+            return agent.GetObservation();
+        }
+
+        [JsonRpcMethod]
         RLResult step(string action) 
         {
             return agent.Step(action);
@@ -129,15 +135,6 @@ public class Agent : MonoBehaviour
         {
             case "up":
                 direction = Vector3.forward;
-                break;
-            case "down":
-                direction = - Vector3.forward;
-                break;
-            case "right":
-                direction = Vector3.right;
-                break;
-            case "left":
-                direction = - Vector3.right;
                 break;
             case "clockwise":
                 rotation = Quaternion.Euler(0, 20, 0);

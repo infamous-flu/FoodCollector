@@ -13,7 +13,7 @@ class MyQuaternion:
 
 def run(args: argparse.Namespace) -> None:
     unity_comms = UnityComms(port=args.port)
-    res: MyQuaternion = unity_comms.getPosition(ResultClass=MyQuaternion)
+    res: MyQuaternion = unity_comms.getRotation(ResultClass=MyQuaternion)
     print("x:", res.x, "y:", res.y, "z:", res.z, "w:", res.w)
 
 
