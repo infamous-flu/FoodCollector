@@ -32,7 +32,7 @@ class RLResult:
 class MyEnv(Env):
     def __init__(self, unity_comms: UnityComms):
         self.unity_comms = unity_comms
-        self.action_space = spaces.Discrete(3)
+        self.action_space = spaces.Discrete(6)
         self.observation_space = spaces.Box(
             low=-np.inf, high=np.inf, shape=(60, 60), dtype=np.float32)
 
