@@ -37,7 +37,8 @@ class MyEnv(Env):
             low=-np.inf, high=np.inf, shape=(60, 60), dtype=np.float32)
 
     def step(self, action: NDArray[np.uint8]) -> Tuple[NDArray[np.float32], float, bool, dict[str, Any]]:
-        action_str = ["up", "clockwise", "counterclockwise"][action]
+        action_str = ["up", "down", "right", "left",
+                      "clockwise", "counterclockwise"][action]
         rl_result: RLResult = self.unity_comms.step(
             action=action_str, ResultClass=RLResult)
         info = {"finished": rl_result.finished}
