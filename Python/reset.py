@@ -48,7 +48,7 @@ def _ray_results_to_np_array(ray_results: RayResults):
 def run(args: argparse.Namespace) -> None:
     unity_comms = UnityComms(port=args.port)
     res = unity_comms.reset(ResultClass=RayResults)
-    print(_ray_results_to_np_array(res.observation))
+    print(_ray_results_to_np_array(res))
 
 
 if __name__ == "__main__":
