@@ -193,7 +193,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7867623376645829921, guid: b5339e4b990ade14f992aadf3bf8591b, type: 3}
       propertyPath: m_Radius
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7867623376645829921, guid: b5339e4b990ade14f992aadf3bf8591b, type: 3}
       propertyPath: m_IsTrigger
@@ -329,7 +329,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Radius: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &916917435
 PrefabInstance:
