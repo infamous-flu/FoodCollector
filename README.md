@@ -26,8 +26,28 @@ This repository contains the implementation of an agent-based foraging paradigm 
 
 ## Running the Agent
 
-To run the the SAC agent, execute:
+To run the the SAC agent, execute the following script:
 
 ```bash
 python run_sac.py
+```
+
+## Training the Agent
+
+To train the SAC agent, first train the VAE by running the following notebook:
+
+```bash
+jupyter notebook train_vae.ipynb
+```
+
+Then train the MDN-RNN by running the following notebook:
+
+```bash
+jupyter notebook train_rnn.ipynb
+```
+
+Finally, execute the following script:
+
+```bash
+python train_sac.py
 ```
